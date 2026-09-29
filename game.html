@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Arcade Matrix Content</title>
+    <!-- MONETAG INTERSTITIAL AD ENGINE LOADER -->
+    <script src="https://alwingulla.com" data-zone="789012" async data-cfasync="false"></script>
+    
+    <style>
+        :root {
+            --neon-cyan: #00f0ff;
+            --neon-magenta: #ff007f;
+            --neon-yellow: #ffea00;
+            --neon-green: #39ff14;
+            --neon-red: #ff3131;
+        }
+        body {
+            background-image: linear-gradient(to bottom, rgba(5,5,8,0.7), rgba(13,10,24,0.85)), 
+                              url('https://unsplash.com');
+            background-size: cover;
+            background-position: center;
+            margin: 0; padding: 0; display: flex;
+            justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden;
+            font-family: 'Segoe UI', sans-serif; color: #fff;
+        }
+
+        .game-wrapper {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+        }
+
+        canvas {
+            background: rgba(3, 4, 6, 0.92);
+            display: block;
+            cursor: none;
+        }
+
+        .live-screen-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+            z-index: 2;
+            animation: lightFlicker 0.15s infinite;
+        }
+
+        @keyframes lightFlicker {
+            0% { opacity: 0.98; }
+            50% { opacity: 1.0; }
+            100% { opacity: 0.98; }
+        }
+
+        .overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(9, 10, 16, 0.95); display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
+            z-index: 10;
+        }
+        .hidden { display: none !important; }
+        h1 { font-size: 2.2rem; text-transform: uppercase; color: var(--neon-cyan); margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon-cyan); }
+        p { color: #727b9e; font-size: 1rem; margin-bottom: 20px; }
+        .btn {
+            background: transparent; color: #fff; border: 2px solid var(--neon-magenta);
+            padding: 10px 24px; font-weight: bold; text-transform: uppercase;
+            border-radius: 4px; cursor: pointer; transition: all 0.2s;
+        }
+        .btn:hover { background: var(--neon-magenta); box-shadow: 0 0 15px var(--neon-magenta); }
+        .hud {
+            position: absolute; top: 12px; width: 100%; display: flex;
+            justify-content: space-between; font-weight: bold; font-size: 1rem;
+            text-transform: uppercase; z-index: 5; pointer-events: none;
+            letter-spacing: 1px; padding: 0 25px; box-sizing: border-box;
+        }
+        #scoreField { color: var(--neon-cyan); text-shadow: 0 0 6px var(--neon-cyan); }
+        #livesField { color: var(--neon-magenta); text-shadow: 0 0 6px var(--neon-magenta); }
+        #timersField { position: absolute; top: 38px; width: 100%; text-align: center; color: var(--neon-yellow); font-size: 0.8rem; pointer-events: none; z-index: 5; }
+    </style>
+</head>
+<body>
+
+    <div class="game-wrapper">
+        <div class="live-screen-overlay"></div>
+
+        <div class="hud">
+            <div id="scoreField">Score: 0</div>
+            <div id="livesField">Lives: 3</div>
+        </div>
+        <div id="timersField"></div>
+
+        <canvas id="canvas" width="800" height="500"></canvas>
+
+        <div id="startMenu" class="overlay">
+            <h1>Neon Breaker</h1>
+            <p>Steer Paddle with Mouse. Left-Click to Launch Ball & Fire Lasers.</p>
+            <button class="btn" onclick="startEngine()">Launch Engine</button>
+        </div>
+
+        <div id="overMenu" class="overlay hidden">
+            <h1 style="color: var(--neon-red); text-shadow: 0 0 10px var(--neon-red);">System Offline</h1>
+            <p>Game Over. Score: <span id="endScore">0</span></p>
+            <button class="btn" onclick="startEngine()">Reboot Matrix</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        let active = false;
+        let score = 0;
+        let lives = 3;
+        
+        const baseSpeedDefault = 4;
+        const accelerationFactor = 0.0003;
+        let currentSpeedCap = baseSpeedDefault;
+
+        let paddle = { x: 350, y: 470, width: 100, height: 14, isLaser: false };
+        let balls = [], bricks = [], items = [], lasers = [];
+        
+        let timers = { wide: 0, narrow: 0, laser: 0 };
+
+        const TYPE_MULTIBALL = "MULTI", TYPE_WIDE = "WIDE", TYPE_LASER = "LASER", TYPE_SLOW = "SLOW";
+        const TYPE_NARROW = "NARROW", TYPE_SPEEDUP = "SPEED";
+
+        const colors = { 1: "#00f0ff", 2: "#ffea00", 3: "#ff007f" };
+
+        window.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            paddle.x = Math.max(0, Math.min(canvas.width - paddle.width, e.clientX - rect.left - paddle.width / 2));
+        });
+
+        window.addEventListener('click', () => {
+            if (!active) return;
+            balls.forEach(b => { if (b.stuck) { b.stuck = false; b.dx = (Math.random() - 0.5) * currentSpeedCap; b.dy = -currentSpeedCap; } });
+            if (paddle.isLaser) {
+                lasers.push({ x: paddle.x + 4, y: paddle.y, dy: -6 });
+                lasers.push({ x: paddle.x + paddle.width - 8, y: paddle.y, dy: -6 });
+            }
+        });
+
+        function startEngine() {
+            document.getElementById("startMenu").classList.add("hidden");
+            document.getElementById("overMenu").classList.add("hidden");
+            score = 0; lives = 3; currentSpeedCap = baseSpeedDefault;
+            balls = []; items = []; lasers = [];
+            paddle.width = 100; paddle.isLaser = false;
+            timers = { wide: 0, narrow: 0, laser: 0 };
+            
+            document.getElementById("scoreField").innerText = "Score: " + score;
+            document.getElementById("livesField").innerText = "Lives: " + lives;
+            
+            buildGrid();
+            addBall(true);
+            active = true;
+        }
+
+        function buildGrid() {
+            bricks = [];
+            for (let c = 0; c < 9; c++) {
+                for (let r = 0; r < 5; r++) {
+                    let rVal = Math.random();
+                    let hp = rVal > 0.8 ? 3 : (rVal > 0.55 ? 2 : 1);
+                    let dropType = null;
+                    if (Math.random() < 0.35) {
+                        let pool = [TYPE_MULTIBALL, TYPE_WIDE, TYPE_LASER, TYPE_SLOW, TYPE_NARROW, TYPE_SPEEDUP];
+                        dropType = pool[Math.floor(Math.random() * pool.length)];
+                    }
+                    bricks.push({ x: c * 84 + 35, y: r * 34 + 50, w: 72, h: 22, maxHp: hp, hp: hp, item: dropType });
+                }
+            }
+        }
+
+        function addBall(stuck = false) {
+            balls.push({ x: paddle.x + paddle.width / 2, y: paddle.y - 8, r: 7, dx: stuck ? 0 : 2, dy: stuck ? 0 : -4, stuck: stuck });
+        }
+
+        function triggerEnd() {
+            active = false;
+            document.getElementById("endScore").innerText = score;
+            document.getElementById("overMenu").classList.remove("hidden");
+
+            if (typeof showInterstitial === 'function') {
+                showInterstitial(); 
+            }
+        }
+
+        function runModifiers() {
+            let activeAlerts = [];
+            if (timers.wide > 0) { timers.wide--; activeAlerts.push(`WIDE [${(timers.wide/60).toFixed(0)}s]`); if(timers.wide===0) paddle.width=100; }
+            if (timers.narrow > 0) { timers.narrow--; activeAlerts.push(`NARROW [${(timers.narrow/60).toFixed(0)}s]`); if(timers.narrow===0) paddle.width=100; }
+            if (timers.laser > 0) { timers.laser--; activeAlerts.push(`LASER [${(timers.laser/60).toFixed(0)}s]`); if(timers.laser===0) paddle.isLaser=false; }
+            document.getElementById("timersField").innerText = activeAlerts.join(" | ");
+        }
+
+        function applyItem(type) {
+            if (type === TYPE_MULTIBALL) { addBall(); addBall(); }
+            else if (type === TYPE_WIDE) { timers.narrow = 0; paddle.width = 150; timers.wide = 600; }
+            else if (type === TYPE_NARROW) { timers.wide = 0; paddle.width = 60; timers.narrow = 480; }
+            else if (type === TYPE_LASER) { paddle.isLaser = true; timers.laser = 480; }
+            else if (type === TYPE_SLOW) { currentSpeedCap = baseSpeedDefault; balls.forEach(b => { let a = Math.atan2(b.dy, b.dx); b.dx = Math.cos(a)*currentSpeedCap; b.dy = Math.sin(a)*currentSpeedCap; }); }
+            else if (type === TYPE_SPEEDUP) { currentSpeedCap += 1.8; }
+        }
+
+        function update() {
+            if (!active) return;
+            currentSpeedCap += accelerationFactor;
+            runModifiers();
+
+            for (let i = balls.length - 1; i >= 0; i--) {
+                let b = balls[i];
+                if (b.stuck) { b.x = paddle.x + paddle.width / 2; continue; }
+                b.x += b.dx; b.y += b.dy;
+
+                if (b.x - b.r <= 0 || b.x + b.r >= canvas.width) b.dx = -b.dx;
+                if (b.y - b.r <= 0) b.dy = -b.dy;
+
+                if (b.y + b.r >= paddle.y && b.y - b.r <= paddle.y + paddle.height && b.x >= paddle.x && b.x <= paddle.x + paddle.width) {
+                    let hit = (b.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
+                    let a = hit * (Math.PI / 3);
