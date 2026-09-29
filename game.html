@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Arcade Matrix Content</title>
-    <!-- Live Monetag interstitial engine loader asset line placement -->
+    <!-- MONETAG INTERSTITIAL AD ENGINE LOADER -->
     <script src="https://alwingulla.com" data-zone="789012" async data-cfasync="false"></script>
     
     <style>
@@ -15,184 +14,196 @@
             --neon-green: #39ff14;
             --neon-red: #ff3131;
         }
-        body {
-            background-image: linear-gradient(to bottom, rgba(5,5,8,0.7), rgba(13,10,24,0.85)), 
-                              url('https://unsplash.com');
-            background-size: cover; background-position: center;
-            margin: 0; padding: 0; display: flex; justify-content: center; align-items: center;
-            height: 100vh; overflow: hidden; font-family: 'Segoe UI', sans-serif; color: #fff;
-            user-select: none; -webkit-user-select: none; touch-action: none;
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background-color: #030406; display: flex;
+            justify-content: center; align-items: center;
+            overflow: hidden; font-family: 'Segoe UI', sans-serif; color: #fff;
         }
-
-        .game-wrapper {
-            position: relative; width: 100%; max-width: 800px; height: 100%; max-height: 500px;
-            aspect-ratio: 16/10; box-shadow: 0 0 40px rgba(0,0,0,0.8); overflow: hidden;
+        .game-container {
+            position: relative; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
         }
-
-        canvas { width: 100%; height: 100%; display: block; background: rgba(3, 4, 6, 0.94); }
-
+        canvas {
+            background: #020204; box-shadow: inset 0 0 20px #000;
+            max-width: 100%; max-height: 100%; object-fit: contain;
+        }
         .live-screen-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%); background-size: 100% 4px;
-            pointer-events: none; z-index: 2; animation: lightFlicker 0.15s infinite;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
+            background-size: 100% 4px; pointer-events: none; z-index: 2;
         }
-
-        @keyframes lightFlicker { 0% { opacity: 0.98; } 50% { opacity: 1.0; } 100% { opacity: 0.98; } }
-
-        /* 💥 INTENSE NEON GAME OVER ANIMATION STYLES WITH SHAKE EFFECTS */
-        .game-over-shake { animation: matrixScreenCollapse 0.4s cubic-bezier(.36,.07,.19,.97) both; }
-        @keyframes matrixScreenCollapse {
-            10%, 90% { transform: translate3d(-2px, 0, 0); }
-            20%, 80% { transform: translate3d(4px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
-            40%, 60% { transform: translate3d(6px, 0, 0); }
-        }
-
         .overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(7, 8, 14, 0.96); display: flex; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 10; transition: all 0.5s ease;
+            background: rgba(9, 10, 16, 0.95); display: flex;
+            flex-direction: column; align-items: center; justify-content: center; z-index: 10;
         }
         .hidden { display: none !important; }
-        
-        h1 { font-size: 2.5rem; text-transform: uppercase; color: var(--neon-cyan); margin-bottom: 10px; letter-spacing: 3px; text-shadow: 0 0 15px var(--neon-cyan); text-align: center; }
-        p { color: #727b9e; font-size: 1rem; margin-bottom: 25px; text-align: center; padding: 0 15px; }
-        
+        h1 { font-size: 2.5rem; text-transform: uppercase; color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); margin-bottom: 10px; }
         .btn {
             background: transparent; color: #fff; border: 2px solid var(--neon-magenta);
             padding: 12px 30px; font-weight: bold; text-transform: uppercase;
-            border-radius: 4px; cursor: pointer; transition: all 0.2s; box-shadow: 0 0 10px var(--neon-magenta);
+            border-radius: 4px; cursor: pointer; font-size: 1.1rem;
         }
-        .btn:hover { background: var(--neon-magenta); box-shadow: 0 0 20px var(--neon-magenta); transform: scale(1.05); }
-        
+        .btn:hover { background: var(--neon-magenta); box-shadow: 0 0 15px var(--neon-magenta); }
         .hud {
-            position: absolute; top: 12px; width: 100%; display: flex; justify-content: space-between;
-            font-weight: bold; font-size: 1.1rem; text-transform: uppercase; z-index: 5;
-            pointer-events: none; letter-spacing: 1px; padding: 0 25px; box-sizing: border-box;
+            position: absolute; top: 15px; width: 100%; display: flex;
+            justify-content: space-between; font-weight: bold; padding: 0 30px; box-sizing: border-box;
+            text-transform: uppercase; font-size: 1.2rem; pointer-events: none; z-index: 5;
         }
-        #scoreField { color: var(--neon-cyan); text-shadow: 0 0 6px var(--neon-cyan); }
-        #livesField { color: var(--neon-magenta); text-shadow: 0 0 6px var(--neon-magenta); }
-        #timersField { position: absolute; top: 38px; width: 100%; text-align: center; color: var(--neon-yellow); font-size: 0.8rem; pointer-events: none; z-index: 5; }
     </style>
 </head>
 <body>
 
-    <div class="game-wrapper" id="gameWindow">
+    <div class="game-container" id="arenaWrapper">
         <div class="live-screen-overlay"></div>
-
         <div class="hud">
-            <div id="scoreField">Score: 0</div>
-            <div id="livesField">Lives: 3</div>
+            <div style="color: var(--neon-cyan);">Score: <span id="scoreDisplay">0</span></div>
+            <div style="color: var(--neon-magenta);">Lives: <span id="livesDisplay">3</span></div>
         </div>
-        <div id="timersField"></div>
 
-        <!-- System canvas configured explicitly for standard base sizes -->
-        <canvas id="canvas" width="800" height="500"></canvas>
+        <canvas id="gameCanvas" width="800" height="500"></canvas>
 
         <div id="startMenu" class="overlay">
             <h1>Neon Breaker</h1>
-            <p>Move mouse or slide finger to steer paddle. Tap/Click to launch ball & fire lasers.</p>
-            <button class="btn" onclick="startEngine()">Launch Engine</button>
+            <p style="color:#727b9e; margin-bottom:20px; text-align:center; padding:0 20px;">Tap/Click to Activate Full-Screen & Launch Core Game Matrix</p>
+            <button class="btn" onclick="engageMatrix()">Launch Engine</button>
         </div>
 
-        <!-- Animated game over panel screen destination -->
         <div id="overMenu" class="overlay hidden">
-            <h1 style="color: var(--neon-red); text-shadow: 0 0 20px var(--neon-red); animation: lightFlicker 0.2s steps(2) infinite;">SYSTEM OFFLINE</h1>
-            <p style="font-size: 1.2rem; color: #fff;">Final Score: <span id="endScore" style="color: var(--neon-yellow); font-weight: 800;">0</span></p>
-            <button class="btn" onclick="startEngine()">Reboot Matrix</button>
+            <h1 style="color: var(--neon-red); text-shadow: 0 0 10px var(--neon-red);">System Offline</h1>
+            <p style="margin-bottom:20px;">Game Over. Final Score: <span id="endScore">0</span></p>
+            <button class="btn" onclick="engageMatrix()">Reboot Matrix</button>
         </div>
     </div>
 
     <script>
-        const canvas = document.getElementById("canvas");
+        const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
-        const gameWindow = document.getElementById("gameWindow");
 
         let active = false;
-        let score = 0; let lives = 3;
-        const baseSpeedDefault = 4; const accelerationFactor = 0.0003;
-        let currentSpeedCap = baseSpeedDefault;
+        let score = 0, lives = 3;
+        let currentSpeed = 4;
+        const acceleration = 0.0003;
 
         let paddle = { x: 350, y: 470, width: 100, height: 14, isLaser: false };
         let balls = [], bricks = [], items = [], lasers = [];
         let timers = { wide: 0, narrow: 0, laser: 0 };
 
-        const TYPE_MULTIBALL = "MULTI", TYPE_WIDE = "WIDE", TYPE_LASER = "LASER", TYPE_SLOW = "SLOW";
-        const TYPE_NARROW = "NARROW", TYPE_SPEEDUP = "SPEED";
         const colors = { 1: "#00f0ff", 2: "#ffea00", 3: "#ff007f" };
 
-        // 📱 UNIFIED TOUCH & MOUSE INTERACTION SYSTEM
-        function trackInput(clientX) {
+        window.addEventListener('mousemove', (e) => { handleMove(e.clientX); });
+        window.addEventListener('touchmove', (e) => {
+            if(e.touches.length > 0) { handleMove(e.touches[0].clientX); }
+        }, { passive: true });
+
+        function handleMove(clientX) {
             const rect = canvas.getBoundingClientRect();
-            // Scale coordination calculation mapping canvas scaling transformations
             const scaleX = canvas.width / rect.width;
-            const relativeX = (clientX - rect.left) * scaleX;
+            let relativeX = (clientX - rect.left) * scaleX;
             paddle.x = Math.max(0, Math.min(canvas.width - paddle.width, relativeX - paddle.width / 2));
         }
 
-        window.addEventListener('mousemove', (e) => trackInput(e.clientX));
-        window.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0) trackInput(e.touches[0].clientX);
-        }, { passive: false });
-
-        window.addEventListener('click', handleActionTrigger);
-        window.addEventListener('touchstart', (e) => {
-            // Check targets mapping to ensure menus selections button events pass cleanly
-            if(e.target.tagName !== 'BUTTON') {
-                handleActionTrigger();
-            }
-        });
-
-        function handleActionTrigger() {
+        window.addEventListener('click', () => {
             if (!active) return;
-            balls.forEach(b => { if (b.stuck) { b.stuck = false; b.dx = (Math.random() - 0.5) * currentSpeedCap; b.dy = -currentSpeedCap; } });
+            balls.forEach(b => { if (b.stuck) { b.stuck = false; b.dx = (Math.random() - 0.5) * currentSpeed; b.dy = -currentSpeed; } });
             if (paddle.isLaser) {
                 lasers.push({ x: paddle.x + 4, y: paddle.y, dy: -6 });
                 lasers.push({ x: paddle.x + paddle.width - 8, y: paddle.y, dy: -6 });
             }
-        }
+        });
 
-        function startEngine() {
+        function engageMatrix() {
+            const container = document.getElementById("arenaWrapper");
+            if (container.requestFullscreen) container.requestFullscreen();
+            else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
+            else if (container.msRequestFullscreen) container.msRequestFullscreen();
+
             document.getElementById("startMenu").classList.add("hidden");
             document.getElementById("overMenu").classList.add("hidden");
-            gameWindow.classList.remove("game-over-shake");
-            score = 0; lives = 3; currentSpeedCap = baseSpeedDefault;
-            balls = []; items = []; lasers = [];
-            paddle.width = 100; paddle.isLaser = false;
+            
+            score = 0; lives = 3; currentSpeed = 4;
+            balls = []; items = []; lasers = []; paddle.width = 100; paddle.isLaser = false;
             timers = { wide: 0, narrow: 0, laser: 0 };
             
-            document.getElementById("scoreField").innerText = "Score: " + score;
-            document.getElementById("livesField").innerText = "Lives: " + lives;
-            buildGrid(); addBall(true); active = true;
+            document.getElementById("scoreDisplay").innerText = score;
+            document.getElementById("livesDisplay").innerText = lives;
+            
+            buildGrid();
+            balls.push({ x: paddle.x + paddle.width / 2, y: paddle.y - 8, r: 7, dx: 0, dy: 0, stuck: true });
+            active = true;
         }
 
         function buildGrid() {
             bricks = [];
             for (let c = 0; c < 9; c++) {
                 for (let r = 0; r < 5; r++) {
-                    let rVal = Math.random();
-                    let hp = rVal > 0.8 ? 3 : (rVal > 0.55 ? 2 : 1);
-                    let dropType = null;
-                    if (Math.random() < 0.35) {
-                        let pool = [TYPE_MULTIBALL, TYPE_WIDE, TYPE_LASER, TYPE_SLOW, TYPE_NARROW, TYPE_SPEEDUP];
-                        dropType = pool[Math.floor(Math.random() * pool.length)];
-                    }
-                    bricks.push({ x: c * 84 + 35, y: r * 34 + 50, w: 72, h: 22, maxHp: hp, hp: hp, item: dropType });
+                    let hp = Math.random() > 0.8 ? 3 : (Math.random() > 0.6 ? 2 : 1);
+                    let drop = Math.random() < 0.35 ? ["MULTI", "WIDE", "LASER", "SLOW", "NARROW", "SPEED"][Math.floor(Math.random()*6)] : null;
+                    bricks.push({ x: c * 84 + 35, y: r * 34 + 60, w: 72, h: 22, maxHp: hp, hp: hp, item: drop });
                 }
             }
         }
 
-        function addBall(stuck = false) {
-            balls.push({ x: paddle.x + paddle.width / 2, y: paddle.y - 8, r: 7, dx: stuck ? 0 : 2, dy: stuck ? 0 : -4, stuck: stuck });
-        }
-
-        // 💥 DYNAMIC GLITCH GAME OVER TRIGGER ENGINE
         function triggerEnd() {
             active = false;
             document.getElementById("endScore").innerText = score;
             document.getElementById("overMenu").classList.remove("hidden");
-            
-            // Apply physical glitch rumble shake animations to screen container
-            gameWindow.classList.add("game-over-shake");
+            window.parent.postMessage({ type: "GAME_OVER", score: score }, "*");
+            if (typeof showInterstitial === 'function') { showInterstitial(); }
+        }
 
-            if (typeof showInterstitial === 'function') {
+        function update() {
+            if (!active) return;
+            currentSpeed += acceleration;
+
+            if (timers.wide > 0 && --timers.wide === 0) paddle.width = 100;
+            if (timers.narrow > 0 && --timers.narrow === 0) paddle.width = 100;
+            if (timers.laser > 0 && --timers.laser === 0) paddle.isLaser = false;
+
+            for (let i = balls.length - 1; i >= 0; i--) {
+                let b = balls[i];
+                if (b.stuck) { b.x = paddle.x + paddle.width / 2; continue; }
+                b.x += b.dx; b.y += b.dy;
+
+                if (b.x - b.r <= 0 || b.x + b.r >= canvas.width) b.dx = -b.dx;
+                if (b.y - b.r <= 0) b.dy = -b.dy;
+
+                if (b.y + b.r >= paddle.y && b.y - b.r <= paddle.y + paddle.height && b.x >= paddle.x && b.x <= paddle.x + paddle.width) {
+                    let hit = (b.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
+                    b.dx = Math.sin(hit * (Math.PI / 3)) * currentSpeed;
+                    b.dy = -Math.cos(hit * (Math.PI / 3)) * currentSpeed;
+                    b.y = paddle.y - b.r;
+                }
+
+                for (let j = bricks.length - 1; j >= 0; j--) {
+                    let k = bricks[j];
+                    if (b.x + b.r > k.x && b.x - b.r < k.x + k.w && b.y + b.r > k.y && b.y - b.r < k.y + k.h) {
+                        k.hp--; score += 10;
+                        if (Math.abs((b.x - b.dx) - k.x) < b.r || Math.abs((b.x - b.dx) - (k.x + k.w)) < b.r) b.dx = -b.dx;
+                        else b.dy = -b.dy;
+
+                        if (k.hp <= 0) {
+                            score += k.maxHp * 15;
+                            if (k.item) items.push({ x: k.x + k.w/2, y: k.y + k.h, type: k.item, w: 12, h: 12, dy: 2.2 });
+                            bricks.splice(j, 1);
+                        }
+                        document.getElementById("scoreDisplay").innerText = score;
+                        break;
+                    }
+                }
+                if (b.y - b.r > canvas.height) balls.splice(i, 1);
+            }
+
+            if (balls.length === 0) {
+                if (--lives <= 0) { triggerEnd(); } 
+                else {
+                    document.getElementById("livesDisplay").innerText = lives;
+                    balls.push({ x: paddle.x + paddle.width / 2, y: paddle.y - 8, r: 7, dx: 0, dy: 0, stuck: true });
+                }
+            }
+
+            for (let i = items.length - 1; i >= 0; i--) {
+                let p = items[i]; p.y += p.dy;
+                if (p.y + p.h >= paddle.y && p.y <= paddle.y + paddle.height && p.x + p.w >= paddle.x && p.x <= paddle.x + paddle.width) {
+                    if (p.type === "MULTI") { balls.push({ x: paddle.x+paddle.width/2, y: paddle.y-8, r: 7, dx: 2, dy: -4 }); }
