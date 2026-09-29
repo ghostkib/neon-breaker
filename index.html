@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Breaker Hub | Play & Climb</title>
+    <style>
+        :root {
+            --bg-color: #05060b;
+            --panel-bg: rgba(17, 19, 31, 0.85);
+            --panel-border: #1f2336;
+            --neon-cyan: #00f0ff;
+            --neon-magenta: #ff007f;
+            --neon-yellow: #ffea00;
+            --neon-red: #ff3131;
+            --text-muted: #8b94b5;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-color);
+            background-image: linear-gradient(to bottom, rgba(5, 6, 11, 0.88), rgba(9, 10, 16, 0.95)), 
+                              url('https://unsplash.com');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #ffffff;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+        }
+
+        .container { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        .btn {
+            background: transparent; color: #fff; border: 2px solid var(--neon-magenta);
+            padding: 10px 24px; font-weight: bold; text-transform: uppercase;
+            border-radius: 4px; cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 0 10px rgba(255, 0, 127, 0.2);
+        }
+        .btn:hover { background: var(--neon-magenta); box-shadow: 0 0 20px rgba(255, 0, 127, 0.6); }
+        .btn-cyan { border-color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
+        .btn-cyan:hover { background: var(--neon-cyan); color: #000; box-shadow: 0 0 20px rgba(0, 240, 255, 0.6); }
+        
+        header { 
+            background: rgba(17, 19, 31, 0.95); 
+            backdrop-filter: blur(8px);
+            border-bottom: 2px solid var(--panel-border); 
+            padding: 15px 0;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .nav-wrapper { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 900; letter-spacing: 2px; color: var(--neon-cyan); font-size: 1.3rem; text-shadow: 0 0 10px rgba(0, 240, 255, 0.4); }
+        .nav-links { display: flex; list-style: none; gap: 25px; }
+        .nav-links a { color: #fff; text-decoration: none; font-size: 0.95rem; font-weight: 600; text-transform: uppercase; }
+        .nav-links a:hover { color: var(--neon-magenta); }
+
+        .hero { text-align: center; padding: 100px 20px; position: relative; }
+        .hero h1 { font-size: 4rem; text-transform: uppercase; letter-spacing: 4px; color: #fff; margin-bottom: 5px; text-shadow: 0 0 20px rgba(0, 240, 255, 0.6), 0 0 40px rgba(255, 0, 127, 0.3); }
+        .hero p { color: #fff; font-size: 1.3rem; margin-bottom: 30px; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+
+        .ad-container-wrapper {
+            margin: 40px auto;
+            max-width: 728px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .ad-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+        .ad-banner-slot {
+            background: rgba(11, 12, 20, 0.8); 
+            border: 1px dashed var(--panel-border);
+            backdrop-filter: blur(4px);
+            width: 100%;
+            min-height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 5px; }
+        .panel { background: var(--panel-bg); border: 2px solid var(--panel-border); border-radius: 8px; padding: 25px; backdrop-filter: blur(8px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .panel h3 { text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid var(--panel-border); padding-bottom: 10px; color: #fff; }
+        
+        .leaderboard-table { width: 100%; border-collapse: collapse; }
+        .leaderboard-table tr { border-bottom: 1px solid #1a1d2f; }
+        .leaderboard-table td { padding: 12px 8px; font-weight: 600; }
+        .rank { width: 40px; font-weight: 800; }
+        .rank-1 { color: var(--neon-yellow); text-shadow: 0 0 8px rgba(255, 234, 0, 0.5); }
+        .rank-2 { color: #bdc3c7; }
+        .rank-3 { color: #cd7f32; }
+        .score-col { text-align: right; color: var(--neon-cyan); }
+
+        .profile-card p { margin-bottom: 12px; font-weight: 600; color: var(--text-muted); }
+        .profile-card span { color: #fff; float: right; }
+        .profile-card .btn { width: 100%; margin-top: 15px; }
+
+        .stats-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center; margin-top: 20px; }
+        .stat-box { background: rgba(12, 14, 23, 0.8); padding: 15px; border-radius: 6px; border: 1px solid var(--panel-border); }
+        .stat-box div { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; }
+        .stat-box font { font-size: 1.6rem; font-weight: 800; color: var(--neon-cyan); }
+        .highlights-list { margin-top: 25px; list-style: none; }
+        .highlights-list li { padding: 10px 0; border-top: 1px solid var(--panel-border); font-weight: 600; }
+        .highlights-list label { color: var(--text-muted); }
+        .highlights-list span { float: right; color: var(--neon-magenta); }
+
+        .game-viewport-section { background: rgba(6, 7, 10, 0.7); padding: 60px 0; text-align: center; border-top: 2px solid var(--panel-border); border-bottom: 2px solid var(--panel-border); backdrop-filter: blur(4px); }
+        .canvas-frame-container { display: inline-block; background: #11131f; padding: 15px; border-radius: 12px; border: 2px solid var(--neon-cyan); box-shadow: 0 0 35px rgba(0, 240, 255, 0.15); }
+        iframe { width: 800px; height: 500px; border: none; background: #000; border-radius: 6px; display: block; }
+
+        footer { background: #07080d; border-top: 1px solid var(--panel-border); padding: 30px 0; color: var(--text-muted); font-size: 0.9rem; }
+        .footer-wrapper { display: flex; justify-content: space-between; align-items: center; }
+        .social-links { display: flex; list-style: none; gap: 20px; }
+        .social-links a { color: var(--text-muted); text-decoration: none; font-weight: 600; }
+        .social-links a:hover { color: #fff; }
+
+        @media (max-width: 850px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            iframe { width: 100%; max-width: 100%; height: auto; aspect-ratio: 16/10; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container nav-wrapper">
+            <div class="logo">🎮 NEON BREAKER</div>
+            <ul class="nav-links">
+                <li><a href="#play">Play</a></li>
+                <li><a href="#leaderboard">Leaderboard</a></li>
+                <li><a href="#rules">How to Play</a></li>
+            </ul>
+            <button class="btn btn-cyan" style="padding: 6px 16px; font-size: 0.85rem;">Login</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <p style="color: var(--neon-magenta); text-transform: uppercase; font-weight: bold; letter-spacing: 4px; margin-bottom: 5px;">Season 1 Active</p>
+            <h1>Brick Breaker Arcade</h1>
+            <p>Play. Compete. Climb.</p>
+            <a href="#play" class="btn">Play Now</a>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- 📢 LIVE MONETAG TOP AD BANNER CONTAINER -->
+        <div class="ad-container-wrapper">
+            <div class="ad-label">Advertisement</div>
+            <div class="ad-banner-slot">
+                <!-- MONETAG IN-PAGE PUSH BANNER SCRIPT START -->
+                <script>(s=document.createElement('script')).src='https://grooustu.net;</script>
+                <!-- MONETAG IN-PAGE PUSH BANNER SCRIPT END -->
+            </div>
+        </div>
+
+        <section class="dashboard-grid" id="leaderboard">
+            <div class="panel">
+                <h3>🏆 Top Global Rankings</h3>
+                <table class="leaderboard-table" id="leaderboardBody"></table>
+            </div>
+
+            <div class="panel profile-card">
+                <h3>👤 Your Profile</h3>
+                <p>Global Rank <span>#1,247</span></p>
+                <p>Account Level <span>Lv. 14</span></p>
+                <p>Personal Best <span>2,840</span></p>
+                <p>Connected Region <span>BD Portal</span></p>
+                <button class="btn btn-cyan">View Profile</button>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="panel" style="margin-top: 30px;">
+            <h3 style="border: none; margin-bottom: 10px;">📊 My Gaming Data Analysis</h3>
+            <div class="stats-summary-grid">
+                <div class="stat-box"><div>Games Played</div><font>86</font></div>
+                <div class="stat-box"><div>Best Score</div><font>2,840</font></div>
+                <div class="stat-box"><div>Total Score</div><font>12,450</font></div>
+            </div>
+            <ul class="highlights-list">
+                <li><label>🏆 Highest Rank Lifetime:</label> <span>#847</span></li>
+                <li><label>🔥 Current Login Streak:</label> <span>7 Days</span></li>
+                <li><label>⏱ Active Combined Playtime:</label> <span>18h 42m</span></li>
+            </ul>
+            <div style="text-align: center; margin-top: 25px;">
+                <button class="btn" style="font-size: 0.85rem; padding: 8px 20px;">View Full History</button>
