@@ -196,7 +196,7 @@
             document.getElementById("timersField").innerText = activeAlerts.join(" | ");
         }
 
-        function applyItem(type) {
+       function applyItem(type) {
             if (type === TYPE_MULTIBALL) { addBall(); addBall(); }
             else if (type === TYPE_WIDE) { timers.narrow = 0; paddle.width = 150; timers.wide = 600; }
             else if (type === TYPE_NARROW) { timers.wide = 0; paddle.width = 60; timers.narrow = 480; }
@@ -221,3 +221,94 @@
                 if (b.y + b.r >= paddle.y && b.y - b.r <= paddle.y + paddle.height && b.x >= paddle.x && b.x <= paddle.x + paddle.width) {
                     let hit = (b.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
                     let a = hit * (Math.PI / 3);
+                    b.dx = Math.sin(a) * currentSpeedCap; b.dy = -Math.cos(a) * currentSpeedCap;
+                    b.y = paddle.y - b.r;
+                }
+
+                for (let j = bricks.length - 1; j >= 0; j--) {
+                    let k = bricks[j];
+                    if (b.x + b.r > k.x && b.x - b.r < k.x + k.w && b.y + b.r > k.y && b.y - b.r < k.y + k.h) {
+                        k.hp--; score += 10;
+                        if (Math.abs((b.x - b.dx) - k.x) < b.r || Math.abs((b.x - b.dx) - (k.x + k.w)) < b.r) b.dx = -b.dx;
+                        else b.dy = -b.dy;
+
+                        if (k.hp <= 0) {
+                            score += k.maxHp * 15;
+                            if (k.item) items.push({ x: k.x + k.w/2, y: k.y + k.h, type: k.item, w: 12, h: 12, dy: 2.2 });
+                            bricks.splice(j, 1);
+                        }
+                        document.getElementById("scoreField").innerText = "Score: " + score;
+                        break;
+                    }
+                }
+                if (b.y - b.r > canvas.height) balls.splice(i, 1);
+            }
+
+            if (balls.length === 0) {
+                lives--; document.getElementById("livesField").innerText = "Lives: " + lives;
+                if (lives <= 0) triggerEnd(); else addBall(true);
+            }
+
+            for (let i = items.length - 1; i >= 0; i--) {
+                let p = items[i]; p.y += p.dy;
+                if (p.y + p.h >= paddle.y && p.y <= paddle.y + paddle.height && p.x + p.w >= paddle.x && p.x <= paddle.x + paddle.width) {
+                    applyItem(p.type); items.splice(i, 1); continue;
+                }
+                if (p.y > canvas.height) items.splice(i, 1);
+            }
+
+            for (let i = lasers.length - 1; i >= 0; i--) {
+                let l = lasers[i]; l.y += l.dy;
+                for (let j = bricks.length - 1; j >= 0; j--) {
+                    let k = bricks[j];
+                    if (l.x > k.x && l.x < k.x + k.w && l.y > k.y && l.y < k.y + k.h) {
+                        k.hp--; lasers.splice(i, 1);
+                        if (k.hp <= 0) { score += k.maxHp * 20; if (k.item) items.push({ x: k.x + k.w/2, y: k.y + k.h, type: k.item, w: 12, h: 12, dy: 2.2 }); bricks.splice(j, 1); }
+                        document.getElementById("scoreField").innerText = "Score: " + score;
+                        break;
+                    }
+                }
+                if (lasers[i] && l.y < 0) lasers.splice(i, 1);
+            }
+            if (bricks.length === 0 && active) { buildGrid(); addBall(true); }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            bricks.forEach(k => {
+                ctx.fillStyle = colors[k.hp];
+                ctx.shadowBlur = 10; ctx.shadowColor = ctx.fillStyle;
+                ctx.fillRect(k.x, k.y, k.w, k.h);
+                if (k.hp > 1) {
+                    ctx.strokeStyle = "rgba(255,255,255,0.4)"; ctx.lineWidth = k.hp === 3 ? 2 : 1;
+                    ctx.strokeRect(k.x + 2, k.y + 2, k.w - 4, k.h - 4);
+                }
+            });
+
+            ctx.fillStyle = paddle.isLaser ? "#ff007f" : "#00f0ff";
+            ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 12;
+            ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+            if (paddle.isLaser) { ctx.fillStyle = "#fff"; ctx.fillRect(paddle.x, paddle.y, 3, -4); ctx.fillRect(paddle.x+paddle.width-3, paddle.y, 3, -4); }
+
+            ctx.fillStyle = "#fff"; ctx.shadowColor = "#00f0ff"; ctx.shadowBlur = 6;
+            balls.forEach(b => { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI*2); ctx.fill(); });
+
+            items.forEach(p => {
+                let isBad = (p.type === TYPE_NARROW || p.type === TYPE_SPEEDUP);
+                ctx.fillStyle = isBad ? "#ff3131" : "#39ff14";
+                ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = 10;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.w/2, 0, Math.PI*2); ctx.fill();
+            });
+
+            ctx.fillStyle = "#ffea00"; ctx.shadowColor = "#ffea00"; ctx.shadowBlur = 4;
+            lasers.forEach(l => ctx.fillRect(l.x, l.y, 3, 8));
+            
+            ctx.shadowBlur = 0;
+        }
+
+        function engineLoop() { update(); draw(); requestAnimationFrame(engineLoop); }
+        engineLoop();
+    </script>
+</body>
+</html>
