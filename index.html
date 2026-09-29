@@ -37,10 +37,10 @@
             padding: 10px 24px; font-weight: bold; text-transform: uppercase;
             border-radius: 4px; cursor: pointer; transition: all 0.2s;
             box-shadow: 0 0 10px rgba(255, 0, 127, 0.2);
+            text-decoration: none;
+            display: inline-block;
         }
         .btn:hover { background: var(--neon-magenta); box-shadow: 0 0 20px rgba(255, 0, 127, 0.6); }
-        .btn-cyan { border-color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
-        .btn-cyan:hover { background: var(--neon-cyan); color: #000; box-shadow: 0 0 20px rgba(0, 240, 255, 0.6); }
         
         header { 
             background: rgba(17, 19, 31, 0.95); 
@@ -53,36 +53,17 @@
         .logo { font-weight: 900; letter-spacing: 2px; color: var(--neon-cyan); font-size: 1.3rem; }
         .nav-links { display: flex; list-style: none; gap: 25px; }
         .nav-links a { color: #fff; text-decoration: none; font-size: 0.95rem; font-weight: 600; text-transform: uppercase; }
+        .nav-links a:hover { color: var(--neon-cyan); }
         
         .hero { text-align: center; padding: 60px 20px; }
         .hero h1 { font-size: 3.5rem; text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 0 20px var(--neon-cyan); }
-        .hero p { color: var(--text-muted); font-size: 1.2rem; }
-
-        .login-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 6, 11, 0.95); display: flex;
-            align-items: center; justify-content: center; z-index: 1000;
-        }
-        .login-box {
-            background: var(--panel-bg); border: 2px solid var(--neon-cyan);
-            border-radius: 8px; padding: 40px; width: 100%; max-width: 400px;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.2); text-align: center;
-        }
-        .login-box h2 { text-transform: uppercase; margin-bottom: 20px; color: var(--neon-cyan); }
-        .input-group { margin-bottom: 20px; text-align: left; }
-        .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; }
-        .input-group input {
-            width: 100%; background: #0c0e17; border: 1px solid var(--panel-border);
-            padding: 12px; color: #fff; border-radius: 4px; font-size: 1rem;
-        }
-        .input-group input:focus { border-color: var(--neon-magenta); outline: none; }
-        .hidden { display: none !important; }
+        .hero p { color: var(--text-muted); font-size: 1.2rem; margin-top: 5px; }
 
         .ad-container-wrapper { margin: 20px auto; max-width: 728px; text-align: center; }
         .ad-banner-slot { background: rgba(11, 12, 20, 0.8); border: 1px dashed var(--panel-border); min-height: 90px; display: flex; justify-content: center; align-items: center; }
 
         .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 30px; }
-        .panel { background: var(--panel-bg); border: 2px solid var(--panel-border); border-radius: 8px; padding: 25px; }
+        .panel { background: var(--panel-bg); border: 2px solid var(--panel-border); border-radius: 8px; padding: 25px; backdrop-filter: blur(8px); }
         .panel h3 { text-transform: uppercase; margin-bottom: 20px; border-bottom: 1px solid var(--panel-border); padding-bottom: 10px; }
         
         .leaderboard-table { width: 100%; border-collapse: collapse; }
@@ -90,7 +71,7 @@
         .score-col { text-align: right; color: var(--neon-cyan); }
 
         .game-viewport-section { background: rgba(6, 7, 10, 0.7); padding: 40px 0; text-align: center; }
-        .canvas-frame-container { display: inline-block; background: #11131f; padding: 15px; border-radius: 12px; border: 2px solid var(--neon-cyan); width: 100%; max-width: 830px; }
+        .canvas-frame-container { display: inline-block; background: #11131f; padding: 15px; border-radius: 12px; border: 2px solid var(--neon-cyan); width: 100%; max-width: 830px; box-shadow: 0 0 25px rgba(0, 240, 255, 0.1); }
         
         .responsive-iframe-wrapper {
             position: relative; width: 100%; padding-top: 62.5%;
@@ -99,7 +80,7 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; background: #000; border-radius: 6px;
         }
 
-        footer { background: #07080d; border-top: 1px solid var(--panel-border); padding: 20px 0; text-align: center; color: var(--text-muted); }
+        footer { background: #07080d; border-top: 1px solid var(--panel-border); padding: 20px 0; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
 
         @media (max-width: 850px) {
             .dashboard-grid { grid-template-columns: 1fr; }
@@ -109,47 +90,30 @@
 </head>
 <body>
 
-    <!-- 🔐 EMAIL LOGIN POPUP -->
-    <div class="login-overlay" id="loginModal">
-        <div class="login-box">
-            <h2>Arcade Access</h2>
-            <form id="loginForm" onsubmit="handleAuth(event)">
-                <div class="input-group">
-                    <label>Email Address</label>
-                    <input type="email" id="userEmail" required placeholder="player@domain.com">
-                </div>
-                <div class="input-group">
-                    <label>Password</label>
-                    <input type="password" id="userPassword" required placeholder="••••••••">
-                </div>
-                <button type="submit" class="btn btn-cyan" style="width: 100%;">Authenticate</button>
-                <p style="font-size:0.8rem; margin-top:15px; color:var(--text-muted); cursor:pointer;" onclick="bypassLogin()">Play as Anonymous Guest</p>
-            </form>
-        </div>
-    </div>
-
     <header>
         <div class="container nav-wrapper">
             <div class="logo">🎮 NEON BREAKER</div>
             <ul class="nav-links">
-                <li><a href="#play">Play</a></li>
-                <li><a href="#leaderboard">Leaderboard</a></li>
+                <li><a href="#play">Play Arena</a></li>
+                <li><a href="#leaderboard">Leaderboards</a></li>
+                <li><a href="#rules">Rules</a></li>
             </ul>
-            <button class="btn btn-cyan" id="authNavBtn" onclick="logout()" style="padding: 6px 16px; font-size: 0.85rem;">Login</button>
+            <a href="#play" class="btn btn-cyan" style="padding: 6px 16px; font-size: 0.85rem; border-color: var(--neon-cyan);">Status: Online</a>
         </div>
     </header>
 
     <section class="hero">
         <div class="container">
             <h1>Brick Breaker Arcade</h1>
-            <p style="color: var(--text-muted);">Play. Compete. Climb.</p>
+            <p>Play. Compete. Climb.</p>
         </div>
     </section>
 
     <div class="container">
+        <!-- 📢 LIVE MONETAG TOP AD BANNER CONTAINER -->
         <div class="ad-container-wrapper">
             <div class="ad-banner-slot">
-                <!-- MONETAG BANNER SCRIPT -->
+                <!-- MONETAG IN-PAGE PUSH BANNER SCRIPT -->
                 <script>(s=document.createElement('script')).src='https://grooustu.net;</script>
             </div>
         </div>
@@ -160,18 +124,18 @@
                 <table class="leaderboard-table">
                     <tr><td>🥇 ShadowKing</td><td class="score-col">98,540</td></tr>
                     <tr><td>🥈 DarkKnight</td><td class="score-col">96,210</td></tr>
-                    <tr><td>🥉 <span id="localPlayerName">Guest</span> (You)</td><td class="score-col" id="localPlayerScore">0</td></tr>
+                    <tr><td>🥉 Guest Player (You)</td><td class="score-col" id="localPlayerScore">0</td></tr>
                 </table>
             </div>
             <div class="panel">
                 <h3>👤 Game Profile</h3>
-                <p style="margin-bottom: 10px;">User: <span id="profileUser" style="color: var(--neon-cyan);">Unauthenticated</span></p>
-                <p>Status: <span id="profileStatus" style="color: var(--neon-magenta);">Guest Player</span></p>
+                <p style="margin-bottom: 10px;">User: <span style="color: var(--neon-cyan);">Guest</span></p>
+                <p>Status: <span style="color: var(--neon-green);">Ready to Play</span></p>
             </div>
         </section>
     </div>
 
-    <!-- 🎮 GAME ARENA SECTION -->
+    <!-- 🎮 CORE INTERACTIVE VIEWPORT ENGINE -->
     <section class="game-viewport-section" id="play">
         <div class="container">
             <div class="canvas-frame-container">
@@ -179,7 +143,18 @@
                     <iframe src="game.html" id="gameFrame" allow="fullscreen"></iframe>
                 </div>
             </div>
+            <p style="margin-top: 15px; font-size: 0.85rem; color: var(--text-muted);">Tap or Click the game window to launch responsive mobile touch controls or desktop full-screen viewports.</p>
         </div>
+    </section>
+
+    <section class="container panel" id="rules" style="margin: 40px auto;">
+        <h3>🕹️ Systems Guide & Drop Mechanics</h3>
+        <p style="margin-bottom: 15px; color: var(--text-muted);">Navigate your cursor right or left across the game frame to steer your paddle instantly under the ball's bouncing path.</p>
+        <ul style="padding-left: 20px; color: var(--text-muted);">
+            <li style="margin-bottom: 8px;"><strong style="color:#fff;">Hard Bricks:</strong> Multi-layered panels (Pink and Yellow) that require 2 to 3 hits to smash completely.</li>
+            <li style="margin-bottom: 8px;"><strong style="color: var(--neon-cyan);">Neon Power-Ups (+):</strong> Catch falling Green dots to trigger Multi-ball, Wide Paddles, Lasers (Click to fire!), or Slow Ball cooldowns.</li>
+            <li><strong style="color: var(--neon-red);">Risk Power-Downs (X):</strong> Dodge falling Red dots to keep your paddle from shrinking or the ball from aggressively speeding up.</li>
+        </ul>
     </section>
 
     <footer>
@@ -187,22 +162,12 @@
     </footer>
 
     <script>
-        function handleAuth(e) {
-            e.preventDefault();
-            const email = document.getElementById("userEmail").value;
-            const name = email.split('@')[0];
-            document.getElementById("loginModal").classList.add("hidden");
-            document.getElementById("profileUser").innerText = name;
-            document.getElementById("profileStatus").innerText = "Verified Member";
-            document.getElementById("localPlayerName").innerText = name;
-            document.getElementById("authNavBtn").innerText = "Logout";
-            localStorage.setItem("gameUser", name);
-        }
-
-                function bypassLogin() {
-            document.getElementById("loginModal").classList.add("hidden");
-            document.getElementById("profileUser").innerText = "Guest_Player";
-            document.getElementById("profileStatus").innerText = "Anonymous Mode";
-            document.getElementById("localPlayerName").innerText = "Guest";
-            document.getElementById("authNavBtn").innerText = "Login";
-            localStorage.setItem("gameUser", "Guest");
+        // Catch incoming live game-over statistics score adjustments from iframe engine safely
+        window.addEventListener("message", function(event) {
+            if (event.data && event.data.type === "GAME_OVER") {
+                document.getElementById("localPlayerScore").innerText = event.data.score.toLocaleString();
+            }
+        });
+    </script>
+</body>
+</html>
