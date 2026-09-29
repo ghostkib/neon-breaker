@@ -101,7 +101,7 @@
 
         window.addEventListener('mousemove', (e) => { handleInput(e.clientX); });
         window.addEventListener('touchmove', (e) => {
-            if(e.touches.length > 0) { handleInput(e.touches.clientX); }
+            if(e.touches.length > 0) { handleInput(e.touches[0].clientX); }
         }, { passive: false });
         window.addEventListener('touchstart', (e) => {
             if(active && e.touches.length > 0) { launchBallAndFire(); }
@@ -156,9 +156,8 @@
             document.getElementById("endScore").innerText = score;
             document.getElementById("overMenu").classList.remove("hidden");
             window.parent.postMessage({ type: "GAME_OVER", score: score }, "*");
-            // Fallback safety filter wrapper
             if (typeof showInterstitial === 'function') { 
-                try { showInterstitial(); } catch(e) { console.log("Ad block bypass."); }
+                try { showInterstitial(); } catch(e) { console.log("Ad bypassed."); }
             }
         }
 
@@ -214,3 +213,4 @@
 
             for (let i = items.length - 1; i >= 0; i--) {
                 let p = items[i]; p.y += p.dy;
+                if (p.y + p.h >= paddle.y && p.y <= paddle.y + paddle.height && p.x + p.w >= paddle.x && p.x <= paddle.x + paddle.width) {
