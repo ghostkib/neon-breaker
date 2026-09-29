@@ -187,5 +187,87 @@
                 <li><label>🔥 Current Login Streak:</label> <span>7 Days</span></li>
                 <li><label>⏱ Active Combined Playtime:</label> <span>18h 42m</span></li>
             </ul>
-            <div style="text-align: center; margin-top: 25px;">
+           <div style="text-align: center; margin-top: 25px;">
                 <button class="btn" style="font-size: 0.85rem; padding: 8px 20px;">View Full History</button>
+            </div>
+        </section>
+
+        <div class="ad-container-wrapper">
+            <div class="ad-label">Advertisement</div>
+            <div class="ad-banner-slot">
+                <p style="color: var(--text-muted); font-size:0.8rem;">Monetag Display Stream Active</p>
+            </div>
+        </div>
+    </div>
+
+    <section class="game-viewport-section" id="play">
+        <div class="container">
+            <h2 class="section-title">🎮 Core Engine Arena</h2>
+            <div class="canvas-frame-container">
+                <iframe src="game.html" title="Arcade Canvas Game Matrix"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <section class="container panel" id="rules" style="margin: 40px auto;">
+        <h3>🕹️ Systems Guide & Drop Mechanics</h3>
+        <p style="margin-bottom: 15px; color: var(--text-muted);">Navigate your cursor right or left across the game frame to steer your paddle instantly under the ball's bouncing path.</p>
+        <ul style="padding-left: 20px; color: var(--text-muted);">
+            <li style="margin-bottom: 8px;"><strong style="color:#fff;">Hard Bricks:</strong> Multi-layered neon panels (Pink and Yellow) that require 2 to 3 hits to smash completely.</li>
+            <li style="margin-bottom: 8px;"><strong style="color: var(--neon-cyan);">Neon Power-Ups (+):</strong> Catch falling Green dots to trigger Multi-ball, Wide Paddles, Lasers (Click to fire!), or Slow Ball cooldowns.</li>
+            <li><strong style="color: var(--neon-red);">Risk Power-Downs (X):</strong> Dodge falling Red dots to keep your paddle from shrinking or the ball from aggressively speeding up.</li>
+        </ul>
+    </section>
+
+    <footer>
+        <div class="container footer-wrapper">
+            <div><strong>🎮 NEON BREAKER HUB</strong> &nbsp;|&nbsp; © 2026 Sandbox Matrix Labs</div>
+            <ul class="social-links">
+                <li><a href="#">Discord</a></li>
+                <li><a href="#">YouTube</a></li>
+                <li><a href="#">Facebook</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+        const databaseRankings = [
+            { name: "ShadowKing", score: 98540, isGuest: false },
+            { name: "DarkKnight", score: 96210, isGuest: false },
+            { name: null,         score: 94870, isGuest: true  },
+            { name: "GhostX",     score: 92340, isGuest: false },
+            { name: "   ",        score: 91120, isGuest: false },
+            { name: "Player_100", score: 42100, isGuest: false }
+        ];
+
+        function populateLeaderboard(players) {
+            const tbody = document.getElementById("leaderboardBody");
+            tbody.innerHTML = "";
+
+            players.forEach((player, index) => {
+                let finalName = (player.isGuest || !player.name || player.name.trim() === "") 
+                    ? "Guest" 
+                    : player.name.trim();
+
+                let rankSymbol = index + 1;
+                if (index === 0) rankSymbol = "🥇";
+                if (index === 1) rankSymbol = "🥈";
+                if (index === 2) rankSymbol = "🥉";
+
+                const row = `
+                    <tr>
+                        <td class="rank ${index < 3 ? 'rank-' + (index + 1) : ''}">${rankSymbol}</td>
+                        <td>${finalName}</td>
+                        <td class="score-col">${player.score.toLocaleString()}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            populateLeaderboard(databaseRankings);
+        });
+    </script>
+</body>
+</html>
