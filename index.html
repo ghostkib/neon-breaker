@@ -55,12 +55,22 @@
         .nav-links a { color: #fff; text-decoration: none; font-size: 0.95rem; font-weight: 600; text-transform: uppercase; }
         .nav-links a:hover { color: var(--neon-cyan); }
         
-        .hero { text-align: center; padding: 60px 20px; }
-        .hero h1 { font-size: 3.5rem; text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 0 20px var(--neon-cyan); }
-        .hero p { color: var(--text-muted); font-size: 1.2rem; margin-top: 5px; }
+        .hero { text-align: center; padding: 40px 20px 20px 20px; }
+        .hero h1 { font-size: 3.5rem; text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 0 20px var(--neon-cyan); margin-bottom: 5px; }
+        .hero p { color: var(--text-muted); font-size: 1.2rem; }
 
         .ad-container-wrapper { margin: 20px auto; max-width: 728px; text-align: center; }
         .ad-banner-slot { background: rgba(11, 12, 20, 0.8); border: 1px dashed var(--panel-border); min-height: 90px; display: flex; justify-content: center; align-items: center; }
+
+        .game-viewport-section { background: rgba(6, 7, 10, 0.7); padding: 30px 0; text-align: center; margin-bottom: 40px; }
+        .canvas-frame-container { display: inline-block; background: #11131f; padding: 15px; border-radius: 12px; border: 2px solid var(--neon-cyan); width: 100%; max-width: 830px; box-shadow: 0 0 25px rgba(0, 240, 255, 0.15); }
+        
+        .responsive-iframe-wrapper {
+            position: relative; width: 100%; padding-top: 62.5%;
+        }
+        iframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; background: #000; border-radius: 6px;
+        }
 
         .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 30px; }
         .panel { background: var(--panel-bg); border: 2px solid var(--panel-border); border-radius: 8px; padding: 25px; backdrop-filter: blur(8px); }
@@ -69,16 +79,6 @@
         .leaderboard-table { width: 100%; border-collapse: collapse; }
         .leaderboard-table td { padding: 12px 8px; font-weight: 600; border-bottom: 1px solid #1a1d2f; }
         .score-col { text-align: right; color: var(--neon-cyan); }
-
-        .game-viewport-section { background: rgba(6, 7, 10, 0.7); padding: 40px 0; text-align: center; }
-        .canvas-frame-container { display: inline-block; background: #11131f; padding: 15px; border-radius: 12px; border: 2px solid var(--neon-cyan); width: 100%; max-width: 830px; box-shadow: 0 0 25px rgba(0, 240, 255, 0.1); }
-        
-        .responsive-iframe-wrapper {
-            position: relative; width: 100%; padding-top: 62.5%;
-        }
-        iframe {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; background: #000; border-radius: 6px;
-        }
 
         footer { background: #07080d; border-top: 1px solid var(--panel-border); padding: 20px 0; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
 
@@ -109,6 +109,18 @@
         </div>
     </section>
 
+    <!-- 🎮 CORE INTERACTIVE VIEWPORT ENGINE (PLACED AT THE TOP) -->
+    <section class="game-viewport-section" id="play">
+        <div class="container">
+            <div class="canvas-frame-container">
+                <div class="responsive-iframe-wrapper">
+                    <iframe src="game.html" id="gameFrame" allow="fullscreen"></iframe>
+                </div>
+            </div>
+            <p style="margin-top: 15px; font-size: 0.85rem; color: var(--text-muted);">Tap or Click the game window to launch responsive mobile touch controls or desktop full-screen viewports.</p>
+        </div>
+    </section>
+
     <div class="container">
         <!-- 📢 LIVE MONETAG TOP AD BANNER CONTAINER -->
         <div class="ad-container-wrapper">
@@ -118,6 +130,7 @@
             </div>
         </div>
 
+        <!-- DASHBOARD GRID PLACED DIRECTLY BELOW THE GAME HUB -->
         <section class="dashboard-grid" id="leaderboard">
             <div class="panel">
                 <h3>🏆 Top Global Rankings</h3>
@@ -134,18 +147,6 @@
             </div>
         </section>
     </div>
-
-    <!-- 🎮 CORE INTERACTIVE VIEWPORT ENGINE -->
-    <section class="game-viewport-section" id="play">
-        <div class="container">
-            <div class="canvas-frame-container">
-                <div class="responsive-iframe-wrapper">
-                    <iframe src="game.html" id="gameFrame" allow="fullscreen"></iframe>
-                </div>
-            </div>
-            <p style="margin-top: 15px; font-size: 0.85rem; color: var(--text-muted);">Tap or Click the game window to launch responsive mobile touch controls or desktop full-screen viewports.</p>
-        </div>
-    </section>
 
     <section class="container panel" id="rules" style="margin: 40px auto;">
         <h3>🕹️ Systems Guide & Drop Mechanics</h3>
