@@ -199,6 +199,10 @@
             localStorage.setItem("gameUser", name);
         }
 
-        function bypassLogin() {
+                function bypassLogin() {
             document.getElementById("loginModal").classList.add("hidden");
             document.getElementById("profileUser").innerText = "Guest_Player";
+            document.getElementById("profileStatus").innerText = "Anonymous Mode";
+            document.getElementById("localPlayerName").innerText = "Guest";
+            document.getElementById("authNavBtn").innerText = "Login";
+            localStorage.setItem("gameUser", "Guest");
