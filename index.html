@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="monetag" content="f3db4578e8afc9d0fc7784f7a155ecda">
-    </meta>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Neon Breaker Hub | Play & Climb</title>
@@ -57,7 +55,6 @@
         .game-viewport-section { background: rgba(6, 7, 10, 0.7); padding: 20px 0; text-align: center; margin-bottom: 25px; }
         .canvas-frame-container { display: inline-block; background: #11131f; padding: 10px; border-radius: 12px; border: 2px solid var(--neon-cyan); width: 100%; max-width: 820px; box-shadow: 0 0 25px rgba(0, 240, 255, 0.15); }
         
-        /* Fixed Aspect-Ratio Wrapper to maintain sizing on phones */
         .responsive-iframe-wrapper {
             position: relative; width: 100%; padding-top: 62.5%; height: 0; overflow: hidden;
         }
@@ -75,7 +72,6 @@
 
         footer { background: #07080d; border-top: 1px solid var(--panel-border); padding: 15px 0; text-align: center; color: var(--text-muted); font-size: 0.8rem; }
 
-        /* Media Queries for enhanced mobile responsiveness styling */
         @media (max-width: 600px) {
             .dashboard-grid { grid-template-columns: 1fr; }
             .hero h1 { font-size: 1.8rem; }
@@ -103,7 +99,7 @@
         </div>
     </section>
 
-    <!-- Monetag Top Ad Space -->
+    <!-- Monetag Banner Placement Wrapper -->
     <div class="container">
         <div class="ad-container-wrapper">
             <div class="ad-banner-slot">
@@ -113,7 +109,7 @@
         </div>
     </div>
 
-    <!-- 🎮 FIXED MOBILE-RESPONSIVE GAME HUB -->
+    <!-- Interactive Game Portal Framework Section -->
     <section class="game-viewport-section" id="play">
         <div class="container">
             <div class="canvas-frame-container">
@@ -121,7 +117,7 @@
                     <iframe src="game.html" id="gameFrame"></iframe>
                 </div>
             </div>
-            <p style="margin-top: 12px; font-size: 0.8rem; color: var(--text-muted); padding: 0 10px;">Drag finger on phone screen or use desktop mouse to steer the paddle. Tap screen to launch ball.</p>
+            <p style="margin-top: 12px; font-size: 0.8rem; color: var(--text-muted); padding: 0 10px;">Drag your finger on mobile screen or use your desktop mouse to steer the paddle. Tap the screen to launch the ball.</p>
         </div>
     </section>
 
@@ -155,4 +151,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
