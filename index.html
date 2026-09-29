@@ -55,11 +55,11 @@
         .nav-links a { color: #fff; text-decoration: none; font-size: 0.95rem; font-weight: 600; text-transform: uppercase; }
         .nav-links a:hover { color: var(--neon-cyan); }
         
-        .hero { text-align: center; padding: 40px 20px 20px 20px; }
+        .hero { text-align: center; padding: 40px 20px 10px 20px; }
         .hero h1 { font-size: 3.5rem; text-transform: uppercase; letter-spacing: 4px; text-shadow: 0 0 20px var(--neon-cyan); margin-bottom: 5px; }
         .hero p { color: var(--text-muted); font-size: 1.2rem; }
 
-        .ad-container-wrapper { margin: 20px auto; max-width: 728px; text-align: center; }
+        .ad-container-wrapper { margin: 15px auto 30px auto; max-width: 728px; text-align: center; }
         .ad-banner-slot { background: rgba(11, 12, 20, 0.8); border: 1px dashed var(--panel-border); min-height: 90px; display: flex; justify-content: center; align-items: center; }
 
         .game-viewport-section { background: rgba(6, 7, 10, 0.7); padding: 30px 0; text-align: center; margin-bottom: 40px; }
@@ -109,7 +109,17 @@
         </div>
     </section>
 
-    <!-- 🎮 CORE INTERACTIVE VIEWPORT ENGINE (PLACED AT THE TOP) -->
+    <!-- 📢 AD BOX MOVED DIRECTLY ABOVE GAME CONTAINER -->
+    <div class="container">
+        <div class="ad-container-wrapper">
+            <div class="ad-banner-slot">
+                <!-- MONETAG IN-PAGE PUSH BANNER SCRIPT -->
+                <script>(s=document.createElement('script')).src='https://grooustu.net;</script>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🎮 CORE INTERACTIVE ARCADE STAGE -->
     <section class="game-viewport-section" id="play">
         <div class="container">
             <div class="canvas-frame-container">
@@ -122,15 +132,7 @@
     </section>
 
     <div class="container">
-        <!-- 📢 LIVE MONETAG TOP AD BANNER CONTAINER -->
-        <div class="ad-container-wrapper">
-            <div class="ad-banner-slot">
-                <!-- MONETAG IN-PAGE PUSH BANNER SCRIPT -->
-                <script>(s=document.createElement('script')).src='https://grooustu.net;</script>
-            </div>
-        </div>
-
-        <!-- DASHBOARD GRID PLACED DIRECTLY BELOW THE GAME HUB -->
+        <!-- SCOREBOARDS AND PROFILE DASHBOARDS BELOW THE ARENA AREA -->
         <section class="dashboard-grid" id="leaderboard">
             <div class="panel">
                 <h3>🏆 Top Global Rankings</h3>
@@ -163,7 +165,6 @@
     </footer>
 
     <script>
-        // Catch incoming live game-over statistics score adjustments from iframe engine safely
         window.addEventListener("message", function(event) {
             if (event.data && event.data.type === "GAME_OVER") {
                 document.getElementById("localPlayerScore").innerText = event.data.score.toLocaleString();
