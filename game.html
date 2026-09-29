@@ -4,81 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Arcade Matrix Content</title>
-    <!-- MONETAG INTERSTITIAL AD ENGINE LOADER -->
+    <!-- MONETAG INTERSTITIAL AD ENGINE LOADER (paste the full URL from your Monetag dashboard) -->
     <script src="https://alwingulla.com" data-zone="789012" async data-cfasync="false"></script>
-    
+
     <style>
-        :root {
-            --neon-cyan: #00f0ff;
-            --neon-magenta: #ff007f;
-            --neon-yellow: #ffea00;
-            --neon-green: #39ff14;
-            --neon-red: #ff3131;
-        }
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: #020204; display: flex;
-            justify-content: center; align-items: center;
-            overflow: hidden; font-family: 'Segoe UI', sans-serif; color: #fff;
-            touch-action: none;
-        }
-        .game-container {
-            position: relative; width: 100%; height: 100%;
-            display: flex; justify-content: center; align-items: center;
-            background: #020204;
-        }
-        canvas {
-            display: block;
-            max-width: 100%; max-height: 100%; object-fit: contain;
-            background: #000;
-        }
-        .live-screen-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
-            background-size: 100% 4px; pointer-events: none; z-index: 2;
-        }
-        .overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 6, 11, 0.96); display: flex;
-            flex-direction: column; align-items: center; justify-content: center; z-index: 10;
-            padding: 20px; box-sizing: border-box; text-align: center;
-        }
-        .hidden { display: none !important; }
-        h1 { font-size: 2rem; text-transform: uppercase; color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); margin-bottom: 5px; }
-        p { color: #727b9e; font-size: 0.9rem; margin-bottom: 20px; }
-        .btn {
-            background: transparent; color: #fff; border: 2px solid var(--neon-magenta);
-            padding: 12px 35px; font-weight: bold; text-transform: uppercase;
-            border-radius: 4px; cursor: pointer; font-size: 1rem;
-            box-shadow: 0 0 10px rgba(255, 0, 127, 0.3);
-        }
-        .btn:hover { background: var(--neon-magenta); box-shadow: 0 0 15px var(--neon-magenta); }
-        .hud {
-            position: absolute; top: 10px; width: 100%; display: flex;
-            justify-content: space-between; font-weight: bold; padding: 0 20px; box-sizing: border-box;
-            text-transform: uppercase; font-size: 1rem; pointer-events: none; z-index: 5;
-        }
+        :root { --neon-cyan:#00f0ff; --neon-magenta:#ff007f; --neon-yellow:#ffea00; --neon-green:#39ff14; --neon-red:#ff3131; }
+        body, html { margin:0; padding:0; width:100%; height:100%; background:#020204; display:flex; justify-content:center; align-items:center; overflow:hidden; font-family:'Segoe UI',sans-serif; color:#fff; touch-action:none; }
+        .game-container { position:relative; width:100%; height:100%; display:flex; justify-content:center; align-items:center; background:#020204; }
+        canvas { display:block; max-width:100%; max-height:100%; object-fit:contain; background:#000; }
+        .live-screen-overlay { position:absolute; inset:0; background:linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,.15) 50%); background-size:100% 4px; pointer-events:none; z-index:2; }
+        .overlay { position:absolute; inset:0; background:rgba(5,6,11,.96); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:10; padding:20px; box-sizing:border-box; text-align:center; }
+        .hidden { display:none !important; }
+        h1 { font-size:2rem; text-transform:uppercase; color:var(--neon-cyan); text-shadow:0 0 10px var(--neon-cyan); margin-bottom:5px; }
+        p { color:#727b9e; font-size:.9rem; margin-bottom:20px; }
+        .btn { background:transparent; color:#fff; border:2px solid var(--neon-magenta); padding:12px 35px; font-weight:bold; text-transform:uppercase; border-radius:4px; cursor:pointer; font-size:1rem; box-shadow:0 0 10px rgba(255,0,127,.3); }
+        .btn:hover { background:var(--neon-magenta); box-shadow:0 0 15px var(--neon-magenta); }
+        .hud { position:absolute; top:10px; width:100%; display:flex; justify-content:space-between; font-weight:bold; padding:0 20px; box-sizing:border-box; text-transform:uppercase; font-size:1rem; pointer-events:none; z-index:5; }
     </style>
 </head>
 <body>
-
     <div class="game-container">
         <div class="live-screen-overlay"></div>
         <div class="hud">
-            <div style="color: var(--neon-cyan);">Score: <span id="scoreDisplay">0</span></div>
-            <div style="color: var(--neon-magenta);">Lives: <span id="livesDisplay">3</span></div>
+            <div style="color:var(--neon-cyan);">Score: <span id="scoreDisplay">0</span></div>
+            <div style="color:var(--neon-magenta);">Lives: <span id="livesDisplay">3</span></div>
         </div>
 
         <canvas id="gameCanvas" width="800" height="500"></canvas>
 
         <div id="startMenu" class="overlay">
             <h1>Neon Breaker</h1>
-            <p>Slide finger / move mouse to steer paddle.<br>Tap screen to launch ball & fire lasers.</p>
+            <p>Slide finger / move mouse to steer paddle.<br>Tap screen to launch ball &amp; fire lasers.</p>
             <button class="btn" onclick="engageMatrix()">Start Game</button>
         </div>
 
         <div id="overMenu" class="overlay hidden">
-            <h1 style="color: var(--neon-red); text-shadow: 0 0 10px var(--neon-red);">Game Over</h1>
+            <h1 style="color:var(--neon-red); text-shadow:0 0 10px var(--neon-red);">Game Over</h1>
             <p>Final Score: <span id="endScore">0</span></p>
             <button class="btn" onclick="engageMatrix()">Play Again</button>
         </div>
@@ -98,14 +59,17 @@
         let timers = { wide: 0, narrow: 0, laser: 0 };
 
         const colors = { 1: "#00f0ff", 2: "#ffea00", 3: "#ff007f" };
+        const itemColors = { MULTI:"#39ff14", WIDE:"#00f0ff", LASER:"#ff3131", SLOW:"#ffea00", NARROW:"#ff007f", SPEED:"#ff8800" };
+        const itemLetters = { MULTI:"M", WIDE:"W", LASER:"L", SLOW:"S", NARROW:"N", SPEED:"F" };
 
         window.addEventListener('mousemove', (e) => { handleInput(e.clientX); });
         window.addEventListener('touchmove', (e) => {
-            if(e.touches.length > 0) { handleInput(e.touches[0].clientX); }
+            if (e.touches.length > 0) { handleInput(e.touches[0].clientX); }
         }, { passive: false });
         window.addEventListener('touchstart', (e) => {
-            if(active && e.touches.length > 0) { launchBallAndFire(); }
+            if (active && e.touches.length > 0) { handleInput(e.touches[0].clientX); launchBallAndFire(); }
         }, { passive: false });
+        window.addEventListener('click', () => { if (active) launchBallAndFire(); });
 
         function handleInput(clientX) {
             const rect = canvas.getBoundingClientRect();
@@ -113,8 +77,6 @@
             let relativeX = (clientX - rect.left) * scaleX;
             paddle.x = Math.max(0, Math.min(canvas.width - paddle.width, relativeX - paddle.width / 2));
         }
-
-        window.addEventListener('click', () => { if (active) launchBallAndFire(); });
 
         function launchBallAndFire() {
             balls.forEach(b => { if (b.stuck) { b.stuck = false; b.dx = (Math.random() - 0.5) * currentSpeed; b.dy = -currentSpeed; } });
@@ -124,20 +86,25 @@
             }
         }
 
+        function newStuckBall() {
+            return { x: paddle.x + paddle.width / 2, y: paddle.y - 8, r: 7, dx: 0, dy: 0, stuck: true };
+        }
+
         function engageMatrix() {
             document.getElementById("startMenu").classList.add("hidden");
             document.getElementById("overMenu").classList.add("hidden");
-            
+
             score = 0; lives = 3; currentSpeed = 4;
             balls = []; items = []; lasers = []; paddle.width = 100; paddle.isLaser = false;
             timers = { wide: 0, narrow: 0, laser: 0 };
-            
+
             document.getElementById("scoreDisplay").innerText = score;
             document.getElementById("livesDisplay").innerText = lives;
-            
+
             buildGrid();
-            balls.push({ x: paddle.x + paddle.width / 2, y: paddle.y - 8, r: 7, dx: 0, dy: 0, stuck: true });
-            active = true;
+            balls.push(newStuckBall());
+            // delay so the Start-button click doesn't also launch the ball
+            setTimeout(() => { active = true; }, 0);
         }
 
         function buildGrid() {
@@ -145,7 +112,7 @@
             for (let c = 0; c < 9; c++) {
                 for (let r = 0; r < 5; r++) {
                     let hp = Math.random() > 0.8 ? 3 : (Math.random() > 0.6 ? 2 : 1);
-                    let drop = Math.random() < 0.35 ? ["MULTI", "WIDE", "LASER", "SLOW", "NARROW", "SPEED"][Math.floor(Math.random()*6)] : null;
+                    let drop = Math.random() < 0.35 ? ["MULTI", "WIDE", "LASER", "SLOW", "NARROW", "SPEED"][Math.floor(Math.random() * 6)] : null;
                     bricks.push({ x: c * 84 + 35, y: r * 34 + 60, w: 72, h: 22, maxHp: hp, hp: hp, item: drop });
                 }
             }
@@ -156,9 +123,35 @@
             document.getElementById("endScore").innerText = score;
             document.getElementById("overMenu").classList.remove("hidden");
             window.parent.postMessage({ type: "GAME_OVER", score: score }, "*");
-            if (typeof showInterstitial === 'function') { 
-                try { showInterstitial(); } catch(e) { console.log("Ad bypassed."); }
+            if (typeof showInterstitial === 'function') {
+                try { showInterstitial(); } catch (e) { console.log("Ad bypassed."); }
             }
+        }
+
+        function damageBrick(j) {
+            let k = bricks[j];
+            k.hp--; score += 10;
+            if (k.hp <= 0) {
+                score += k.maxHp * 15;
+                if (k.item) items.push({ x: k.x + k.w / 2, y: k.y + k.h, type: k.item, w: 12, h: 12, dy: 2.2 });
+                bricks.splice(j, 1);
+            }
+            document.getElementById("scoreDisplay").innerText = score;
+        }
+
+        function applyItem(type) {
+            if (type === "MULTI") {
+                let src = balls.find(b => !b.stuck) || balls[0];
+                if (src) for (let n = 0; n < 2; n++) {
+                    let a = (Math.random() - 0.5) * 1.6;
+                    balls.push({ x: src.x, y: src.y, r: 7, dx: Math.sin(a) * currentSpeed, dy: -Math.cos(a) * currentSpeed, stuck: false });
+                }
+            } else if (type === "WIDE") { paddle.width = 170; timers.wide = 900; timers.narrow = 0; }
+            else if (type === "NARROW") { paddle.width = 60; timers.narrow = 900; timers.wide = 0; }
+            else if (type === "LASER") { paddle.isLaser = true; timers.laser = 900; }
+            else if (type === "SLOW") { currentSpeed = Math.max(3, currentSpeed * 0.8); }
+            else if (type === "SPEED") { currentSpeed = currentSpeed * 1.2; }
+            paddle.x = Math.max(0, Math.min(canvas.width - paddle.width, paddle.x));
         }
 
         function update() {
@@ -174,10 +167,11 @@
                 if (b.stuck) { b.x = paddle.x + paddle.width / 2; continue; }
                 b.x += b.dx; b.y += b.dy;
 
-                if (b.x - b.r <= 0 || b.x + b.r >= canvas.width) b.dx = -b.dx;
-                if (b.y - b.r <= 0) b.dy = -b.dy;
+                if (b.x - b.r <= 0) { b.x = b.r; b.dx = Math.abs(b.dx); }
+                if (b.x + b.r >= canvas.width) { b.x = canvas.width - b.r; b.dx = -Math.abs(b.dx); }
+                if (b.y - b.r <= 0) { b.y = b.r; b.dy = Math.abs(b.dy); }
 
-                if (b.y + b.r >= paddle.y && b.y - b.r <= paddle.y + paddle.height && b.x >= paddle.x && b.x <= paddle.x + paddle.width) {
+                if (b.dy > 0 && b.y + b.r >= paddle.y && b.y - b.r <= paddle.y + paddle.height && b.x >= paddle.x && b.x <= paddle.x + paddle.width) {
                     let hit = (b.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
                     b.dx = Math.sin(hit * (Math.PI / 3)) * currentSpeed;
                     b.dy = -Math.cos(hit * (Math.PI / 3)) * currentSpeed;
@@ -187,16 +181,9 @@
                 for (let j = bricks.length - 1; j >= 0; j--) {
                     let k = bricks[j];
                     if (b.x + b.r > k.x && b.x - b.r < k.x + k.w && b.y + b.r > k.y && b.y - b.r < k.y + k.h) {
-                        k.hp--; score += 10;
                         if (Math.abs((b.x - b.dx) - k.x) < b.r || Math.abs((b.x - b.dx) - (k.x + k.w)) < b.r) b.dx = -b.dx;
                         else b.dy = -b.dy;
-
-                        if (k.hp <= 0) {
-                            score += k.maxHp * 15;
-                            if (k.item) items.push({ x: k.x + k.w/2, y: k.y + k.h, type: k.item, w: 12, h: 12, dy: 2.2 });
-                            bricks.splice(j, 1);
-                        }
-                        document.getElementById("scoreDisplay").innerText = score;
+                        damageBrick(j);
                         break;
                     }
                 }
@@ -204,13 +191,77 @@
             }
 
             if (balls.length === 0) {
-                if (--lives <= 0) { triggerEnd(); } 
-                else {
-                    document.getElementById("livesDisplay").innerText = lives;
-                    balls.push({ x: paddle.x + paddle.width / 2, y: paddle.y - 8, r: 7, dx: 0, dy: 0, stuck: true });
-                }
+                if (--lives <= 0) { document.getElementById("livesDisplay").innerText = 0; triggerEnd(); return; }
+                document.getElementById("livesDisplay").innerText = lives;
+                balls.push(newStuckBall());
             }
 
             for (let i = items.length - 1; i >= 0; i--) {
                 let p = items[i]; p.y += p.dy;
-                if (p.y + p.h >= paddle.y && p.y <= paddle.y + paddle.height && p.x + p.w >= paddle.x && p.x <= paddle.x + paddle.width) { 
+                if (p.y + p.h >= paddle.y && p.y <= paddle.y + paddle.height && p.x + p.w >= paddle.x && p.x <= paddle.x + paddle.width) {
+                    applyItem(p.type);
+                    items.splice(i, 1);
+                } else if (p.y > canvas.height) {
+                    items.splice(i, 1);
+                }
+            }
+
+            for (let i = lasers.length - 1; i >= 0; i--) {
+                let l = lasers[i]; l.y += l.dy;
+                let gone = l.y < -10;
+                for (let j = bricks.length - 1; j >= 0 && !gone; j--) {
+                    let k = bricks[j];
+                    if (l.x > k.x && l.x < k.x + k.w && l.y > k.y && l.y < k.y + k.h) { damageBrick(j); gone = true; }
+                }
+                if (gone) lasers.splice(i, 1);
+            }
+
+            if (bricks.length === 0) {
+                buildGrid(); items = []; lasers = [];
+                balls = [newStuckBall()];
+                score += 500;
+                document.getElementById("scoreDisplay").innerText = score;
+            }
+        }
+
+        function draw() {
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            bricks.forEach(k => {
+                ctx.globalAlpha = 0.45 + 0.55 * (k.hp / k.maxHp);
+                ctx.fillStyle = colors[k.maxHp];
+                ctx.shadowColor = colors[k.maxHp]; ctx.shadowBlur = 8;
+                ctx.fillRect(k.x, k.y, k.w, k.h);
+                if (k.item) { ctx.shadowBlur = 0; ctx.fillStyle = "#000"; ctx.fillRect(k.x + k.w / 2 - 3, k.y + k.h / 2 - 3, 6, 6); }
+            });
+            ctx.globalAlpha = 1;
+
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = paddle.isLaser ? "#ff3131" : "#00f0ff";
+            ctx.fillStyle = paddle.isLaser ? "#ff3131" : "#00f0ff";
+            ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+
+            ctx.fillStyle = "#fff"; ctx.shadowColor = "#fff";
+            balls.forEach(b => { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill(); });
+
+            ctx.fillStyle = "#ff3131"; ctx.shadowColor = "#ff3131";
+            lasers.forEach(l => ctx.fillRect(l.x, l.y, 4, 14));
+
+            ctx.font = "bold 11px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+            items.forEach(p => {
+                ctx.shadowColor = itemColors[p.type]; ctx.shadowBlur = 10;
+                ctx.fillStyle = itemColors[p.type];
+                ctx.fillRect(p.x - 9, p.y - 2, 18, 18);
+                ctx.shadowBlur = 0; ctx.fillStyle = "#000";
+                ctx.fillText(itemLetters[p.type], p.x, p.y + 7);
+            });
+            ctx.shadowBlur = 0;
+        }
+
+        function loop() { update(); draw(); requestAnimationFrame(loop); }
+        buildGrid();
+        loop();
+    </script>
+</body>
+</html>
